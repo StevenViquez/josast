@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class VehicleBrand extends Model
 {
     use HasFactory;
+
+    public function vehicle()
+    {
+        return $this->hasOne('App\Models\Vehicle');
+    }
 }

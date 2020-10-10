@@ -17,13 +17,13 @@ class CreateVehiclesTable extends Migration
             $table->id();
             $table->string("license_plate");
             $table->string("year");
-            $table->foreignId("vehicle_type_id");
-            $table->foreignId("vehicle_brand_id");
+            $table->foreignId("vehicletype_id");
+            $table->foreignId("vehiclebrand_id");
             $table->timestamps();
 
 
-            $table->foreign("vehicle_type_id")->references("id")->on("vehicle_types");
-            $table->foreign("vehicle_brand_id")->references("id")->on("vehicle_brands");
+            $table->foreign("vehicletype_id")->references("id")->on("vehicle_types");
+            $table->foreign("vehiclebrand_id")->references("id")->on("vehicle_brands");
         });
     }
 
@@ -35,8 +35,8 @@ class CreateVehiclesTable extends Migration
     public function down()
     {
         Schema::table("vehicles", function (Blueprint $table) {
-            $table->dropForeign("vehicles_vehicle_type_id_foreign");
-            $table->dropForeign("vehicles_vehicle_brand_id_foreign");
+            $table->dropForeign("vehicles_vehicletype_id_foreign");
+            $table->dropForeign("vehicles_vehiclebrand_id_foreign");
         });
 
         Schema::dropIfExists('vehicles');
