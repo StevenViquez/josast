@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class ProductClassification extends Model
 {
     use HasFactory;
+
+    public function product()
+    {
+        return $this->hasOne('App\Models\Product');
+    }
 }

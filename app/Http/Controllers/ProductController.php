@@ -14,7 +14,15 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        try {
+            //List Products
+            $products = Product::with(['productbrand', 'productclassification', 'productfeatures'])->get();
+            $response = $products;
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            //Exception $e;
+            return response()->json($e->getMessage(), 422);
+        }
     }
 
     /**

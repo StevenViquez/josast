@@ -14,7 +14,15 @@ class BillController extends Controller
      */
     public function index()
     {
-        //
+        try {
+            //List Bills
+            $bills = Bill::with(['order', 'order.employee', 'order.customer', 'order.products', 'order.products.productbrand'])->get();
+            $response = $bills;
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            //Exception $e;
+            return response()->json($e->getMessage(), 422);
+        }
     }
 
     /**

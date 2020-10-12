@@ -18,4 +18,9 @@ class Vehicle extends Model
     {
         return $this->belongsTo('App\Models\VehicleType');
     }
+
+    public function employee()
+    {
+        return $this->hasOne('App\Models\Employee');
+    }
 }

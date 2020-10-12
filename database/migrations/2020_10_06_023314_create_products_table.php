@@ -20,12 +20,12 @@ class CreateProductsTable extends Migration
             $table->string("url_picture");
             $table->double('cost', 8, 2);
             $table->boolean('is_enabled');
-            $table->foreignId("product_classification_id");
-            $table->foreignId("product_brand_id");
+            $table->foreignId("productclassification_id");
+            $table->foreignId("productbrand_id");
             $table->timestamps();
 
-            $table->foreign("product_classification_id")->references("id")->on("product_classifications");
-            $table->foreign("product_brand_id")->references("id")->on("product_brands");
+            $table->foreign("productclassification_id")->references("id")->on("product_classifications");
+            $table->foreign("productbrand_id")->references("id")->on("product_brands");
         });
     }
 
@@ -37,8 +37,8 @@ class CreateProductsTable extends Migration
     public function down()
     {
         Schema::table("products", function (Blueprint $table) {
-            $table->dropForeign("products_product_classification_id_foreign");
-            $table->dropForeign("products_product_brand_id_foreign");
+            $table->dropForeign("products_productclassification_id_foreign");
+            $table->dropForeign("products_productbrand_id_foreign");
         });
         Schema::dropIfExists('products');
     }

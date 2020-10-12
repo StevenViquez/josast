@@ -14,7 +14,15 @@ class OrderController extends Controller
      */
     public function index()
     {
-        //
+        try {
+            //List Order
+            $orders = Order::with(['customer', 'employee' ,'products', 'products.productbrand', 'products.productclassification', 'products.productfeatures', 'statuses'])->get();
+            $response = $orders;
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            //Exception $e;
+            return response()->json($e->getMessage(), 422);
+        }
     }
 
     /**

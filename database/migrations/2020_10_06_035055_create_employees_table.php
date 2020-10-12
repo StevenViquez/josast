@@ -23,12 +23,12 @@ class CreateEmployeesTable extends Migration
             $table->timestamp('hired_date');
             $table->boolean('is_enabled');
             $table->foreignId("vehicle_id");
-            $table->foreignId("employee_position_id");
+            $table->foreignId("employeeposition_id");
             $table->timestamps();
 
 
             $table->foreign("vehicle_id")->references("id")->on("vehicles");
-            $table->foreign("employee_position_id")->references("id")->on("employee_positions");
+            $table->foreign("employeeposition_id")->references("id")->on("employee_positions");
         });
     }
 
@@ -41,7 +41,7 @@ class CreateEmployeesTable extends Migration
     {
         Schema::table("employees", function (Blueprint $table) {
             $table->dropForeign("employees_vehicle_id_foreign");
-            $table->dropForeign("employees_employee_position_id_foreign");
+            $table->dropForeign("employees_employeeposition_id_foreign");
         });
         Schema::dropIfExists('employees');
     }

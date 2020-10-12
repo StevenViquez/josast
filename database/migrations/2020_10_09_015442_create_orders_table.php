@@ -15,7 +15,6 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->string("email");
             $table->boolean('need_delivery');
             $table->double('delivery_fee', 8, 2);
             $table->double('subtotal', 8, 2);

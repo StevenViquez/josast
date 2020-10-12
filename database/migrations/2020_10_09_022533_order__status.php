@@ -13,7 +13,7 @@ class OrderStatus extends Migration
      */
     public function up()
     {
-        Schema::create('status_order', function (Blueprint $table) {
+        Schema::create('order_status', function (Blueprint $table) {
             $table->id();
             $table->timestamp('time_status');
             $table->foreignId("status_id");
