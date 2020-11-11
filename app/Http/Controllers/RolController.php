@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Rol;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RolController extends Controller
 {
@@ -14,7 +15,14 @@ class RolController extends Controller
      */
     public function index()
     {
-        //
+        try {
+            $roles = DB::table('rols')->select('id', 'name', 'description')->get();
+            $response = $roles;
+
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            return response()->json($e->getMessage(), 422);
+        }
     }
 
     /**

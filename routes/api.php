@@ -7,6 +7,8 @@ use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RolController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +20,17 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+//Rutas auth
+//http://127.0.0.1:8000/api/josast/auth/login--register--logout
+Route::group(['prefix' => 'josast'], function () {
+    Route::group(['prefix' => 'auth'], function ($router) {
+        Route::post('login', [AuthController::class, 'login']);
+        Route::post('register', [AuthController::class, 'register']);
+        Route::post('logout', [AuthController::class, 'logout']);
+    });
+});
+
 //http://127.0.0.1:8000/api/josast/vehicle
 Route::group(['prefix' => 'josast'], function () {
     Route::group(['prefix' => 'vehicle'], function () {
@@ -36,7 +49,7 @@ Route::group(['prefix' => 'josast'], function () {
 //http://127.0.0.1:8000/api/josast/employee
 Route::group(['prefix' => 'josast'], function () {
     Route::group(['prefix' => 'employee'], function () {
-        Route::get('', [EmployeeController::class, 'index']);
+        Route::get('', [EmployeeController::class, 'index'])->middleware(["auth:api","scope:administrador"]);
     });
 });
 
@@ -53,5 +66,13 @@ Route::group(['prefix' => 'josast'], function () {
 Route::group(['prefix' => 'josast'], function () {
     Route::group(['prefix' => 'bill'], function () {
         Route::get('', [BillController::class, 'index']);
+    });
+});
+
+
+//http://127.0.0.1:8000/api/josast/rol
+Route::group(['prefix' => 'josast'], function () {
+    Route::group(['prefix' => 'rol'], function () {
+        Route::get('', [RolController::class, 'index']);
     });
 });
