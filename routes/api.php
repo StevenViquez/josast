@@ -42,7 +42,8 @@ Route::group(['prefix' => 'josast'], function () {
 //http://127.0.0.1:8000/api/josast/product
 Route::group(['prefix' => 'josast'], function () {
     Route::group(['prefix' => 'product'], function () {
-        Route::get('', [ProductController::class, 'index']);
+        Route::get('all', [ProductController::class, 'index']);
+        Route::get('/{id}', [ProductController::class, 'show']);
     });
 });
 

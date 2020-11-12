@@ -52,9 +52,16 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function show(Product $product)
+    public function show($id)
     {
-        //
+        try {
+            //get a product
+            $products = Product::where('id', $id)->with(['productbrand', 'productclassification', 'productfeatures'])->first();
+            $response = $products;
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            return response()->json($e->getMessage(), 422);
+        }
     }
 
     /**
