@@ -52,9 +52,16 @@ class EmployeeController extends Controller
      * @param  \App\Models\Employee  $employee
      * @return \Illuminate\Http\Response
      */
-    public function show(Employee $employee)
+    public function show($id)
     {
-        //
+        try {
+            //get a employee
+            $employee = Employee::where('id', $id)->with(['employeeposition', 'vehicle', 'vehicle.vehicletype', 'vehicle.vehiclebrand'])->first();
+            $response = $employee;
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            return response()->json($e->getMessage(), 422);
+        }
     }
 
     /**
