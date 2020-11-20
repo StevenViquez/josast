@@ -14,7 +14,14 @@ class ProductClassificationController extends Controller
      */
     public function index()
     {
-        //
+        try {
+            $productClassification = ProductClassification::orderBy('id', 'desc')->get();
+            $response = $productClassification;
+
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            return response()->json($e->getMessage(), 422);
+        }
     }
 
     /**

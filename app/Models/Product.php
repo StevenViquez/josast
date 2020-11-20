@@ -24,6 +24,12 @@ class Product extends Model
         return $this->belongsToMany('App\Models\ProductFeature', 'feature_product');
     }
 
+    //I need to find where I am getting this error: error: "Call to undefined method App\Models\Product::product_features()" when doing the insert in angular
+    public function product_features()
+    {
+        return $this->belongsToMany('App\Models\ProductFeature', 'feature_product');
+    }
+
 
     // public function productfeatures()
     //{

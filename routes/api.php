@@ -8,8 +8,11 @@ use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProductBrandController;
+use App\Http\Controllers\ProductClassificationController;
 use App\Http\Controllers\ProductFeatureController;
 use App\Http\Controllers\RolController;
+use App\Models\ProductBrand;
 use App\Models\ProductFeature;
 
 /*
@@ -90,5 +93,19 @@ Route::group(['prefix' => 'josast'], function () {
 Route::group(['prefix' => 'josast'], function () {
     Route::group(['prefix' => 'productfeature'], function () {
         Route::get('', [ProductFeatureController::class, 'index']);
+    });
+});
+
+//http://127.0.0.1:8000/api/josast/product-classification
+Route::group(['prefix' => 'josast'], function () {
+    Route::group(['prefix' => 'product-classification'], function () {
+        Route::get('', [ProductClassificationController::class, 'index']);
+    });
+});
+
+//http://127.0.0.1:8000/api/josast/product-brand
+Route::group(['prefix' => 'josast'], function () {
+    Route::group(['prefix' => 'product-brand'], function () {
+        Route::get('', [ProductBrandController::class, 'index']);
     });
 });
