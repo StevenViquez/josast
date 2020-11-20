@@ -24,6 +24,13 @@ class Product extends Model
         return $this->belongsToMany('App\Models\ProductFeature', 'feature_product');
     }
 
+
+    // public function productfeatures()
+    //{
+    //  return $this->belongsToMany('App\Models\Product')->withPivot('feature_product');;
+    //}
+
+
     public function orders()
     {
         return $this->belongsToMany('App\Models\Order')->withPivot('quantity');

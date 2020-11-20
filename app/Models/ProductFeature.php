@@ -13,4 +13,9 @@ class ProductFeature extends Model
     {
         return $this->belongsToMany('App\Models\Product', 'feature_product');
     }
+
+    //public function products1()
+    //{
+    //  return $this->belongsToMany('App\Models\Product')->withPivot('feature_product');;
+    //}
 }
