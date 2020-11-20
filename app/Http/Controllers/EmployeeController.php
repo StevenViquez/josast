@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class EmployeeController extends Controller
 {
@@ -43,7 +46,41 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'name' => 'required|min:5',
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json($validator->messages(), 422);
+        }
+        try {
+            $employee = new Employee();
+            $employee->name = $request->input('name');
+            $employee->second_name = $request->input('second_name');
+            $employee->email = $request->input('email');
+            $employee->phone_number = $request->input('phone_number');
+            $employee->salary = $request->input('salary');
+            $employee->hired_date = Carbon::parse($request->input('hired_date'))->format('Y-m-d');
+            $employee->is_enabled = $request->input('is_enabled');
+            $employee->vehicle_id = $request->input('vehicle_id');
+            $employee->employeeposition_id = $request->input('employeeposition_id');
+
+            //Save Employee
+            if ($employee->save()) {
+                $response = 'Empleado creado!';
+                return response()->json($response, 201);
+            } else {
+                $response = [
+                    'msg' => 'Error durante la creación'
+                ];
+                return response()->json($response, 404);
+            }
+        } catch (\Exception $e) {
+            //Exception $e;
+            return response()->json($e->getMessage(), 422);
+        }
     }
 
     /**
@@ -82,9 +119,67 @@ class EmployeeController extends Controller
      * @param  \App\Models\Employee  $employee
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Employee $employee)
+    public function update(Request $request, $id)
     {
-        //
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'name' => 'required|min:5'
+            ]
+        );
+        //Retornar mensajes de validación
+        if ($validator->fails()) {
+            return response()->json($validator->messages(), 422);
+        }
+
+        //Employee's data
+        $employee = Employee::find($id);
+        $employee->name = $request->input('name');
+        $employee->second_name = $request->input('second_name');
+        $employee->email = $request->input('email');
+        $employee->phone_number = $request->input('phone_number');
+        $employee->salary = $request->input('salary');
+        $employee->hired_date = Carbon::parse($request->input('hired_date'))->format('Y-m-d');
+        $employee->is_enabled = $request->input('is_enabled');
+        $employee->vehicle_id = $request->input('vehicle_id');
+        $employee->employeeposition_id = $request->input('employeeposition_id');
+
+        //Validar usuario que actualiza coincida con el que lo registro
+        //$user = auth('api')->user();
+        //$user_id = $user->id;
+
+        //Información de la imagen
+        /* if ($request->hasFile('image')) {
+            //Borrar la imagen anterior
+
+            //Obtener archivo de imagen anterior
+            $videojuegoImagen
+                = public_path("images/{$vj->nombreImagen}");
+            if (File::exists($videojuegoImagen)) {
+                //Borrar imagen anterior
+                File::delete($videojuegoImagen);
+            }
+
+            $file = $request->file('image');
+            $nombreImagen = time() . "foto." . $file->getClientOriginalExtension();
+            $imageUpload = Image::make($file->getRealPath());
+            $path = 'images/';
+            $imageUpload->save(public_path($path) . $nombreImagen);
+            $vj->nombreImagen = $nombreImagen;
+            $vj->pathImagen = url($path) . "/" . $nombreImagen;
+        }*/
+        //Actualizar videojuego
+        if ($employee->update()) {
+            //Sincronice generos
+            //Array de generos
+            $response = 'Empleado actualizado!';
+            return response()->json($response, 200);
+        }
+        $response = [
+            'msg' => 'Error durante la actualización'
+        ];
+
+        return response()->json($response, 404);
     }
 
     /**

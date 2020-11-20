@@ -52,6 +52,8 @@ Route::group(['prefix' => 'josast'], function () {
     Route::group(['prefix' => 'employee'], function () {
         Route::get('all', [EmployeeController::class, 'index']);
         Route::get('/{id}', [EmployeeController::class, 'show']);
+        Route::post('', [EmployeeController::class, 'store']);
+        Route::patch('/{id}', [EmployeeController::class, 'update']);
     });
 });
 //->middleware(["auth:api","scope:administrador"])
