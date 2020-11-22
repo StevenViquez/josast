@@ -14,7 +14,14 @@ class EmployeePositionController extends Controller
      */
     public function index()
     {
-        //
+        try {
+            $employeePosition = EmployeePosition::orderBy('id', 'desc')->get();
+            $response = $employeePosition;
+
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            return response()->json($e->getMessage(), 422);
+        }
     }
 
     /**
