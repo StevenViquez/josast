@@ -61,16 +61,18 @@ Route::group(['prefix' => 'josast'], function () {
     Route::group(['prefix' => 'employee'], function () {
         Route::get('all', [EmployeeController::class, 'index']);
         Route::get('/{id}', [EmployeeController::class, 'show']);
-        Route::post('', [EmployeeController::class, 'store']);
+        Route::post('', [EmployeeController::class, 'store'])->middleware(["auth:api", "scope:administrador"]);
         Route::patch('/{id}', [EmployeeController::class, 'update']);
     });
 });
-//->middleware(["auth:api","scope:administrador"])
+
 
 //http://127.0.0.1:8000/api/josast/order
 Route::group(['prefix' => 'josast'], function () {
     Route::group(['prefix' => 'order'], function () {
-        Route::get('', [OrderController::class, 'index']);
+        Route::get('all', [OrderController::class, 'index']);
+        Route::get('/{id}', [OrderController::class, 'show']);
+        Route::post('', [OrderController::class, 'store']);
     });
 });
 
