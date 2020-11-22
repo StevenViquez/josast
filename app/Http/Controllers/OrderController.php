@@ -50,7 +50,15 @@ class OrderController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'need_delivery' => 'required',
+                'need_delivery' => 'required|boolean:1,0',
+                'delivery_fee' => 'required|numeric|max:10000000',
+                'subtotal' => 'required|numeric|max:10000000',
+                'tax' => 'required|numeric|max:10000000',
+                'total' => 'required|numeric|max:10000000',
+                'employee_id' => 'required|numeric|max:10000000',
+                'customer_id' => 'required',
+                'product_id' => 'required',
+                'quantity' => 'required',
             ]
         );
         if ($validator->fails()) {

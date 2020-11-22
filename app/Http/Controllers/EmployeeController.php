@@ -50,6 +50,14 @@ class EmployeeController extends Controller
             $request->all(),
             [
                 'name' => 'required|min:5',
+                'second_name' => 'required|min:5',
+                'email' => 'required|max:30|email:rfc',
+                'phone_number' => 'required|max:500',
+                'salary' => 'required|numeric|max:10000000',
+                'hired_date' => 'required||date',
+                'is_enabled' => 'required|boolean:1,0',
+                'vehicle_id' => 'required',
+                'employeeposition_id' => 'required',
             ]
         );
         if ($validator->fails()) {
@@ -124,7 +132,15 @@ class EmployeeController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'name' => 'required|min:5'
+                'name' => 'required|min:5',
+                'second_name' => 'required|min:5',
+                'email' => 'required|max:30|email:rfc',
+                'phone_number' => 'required|max:500',
+                'salary' => 'required|numeric|max:10000000',
+                'hired_date' => 'required|date',
+                'is_enabled' => 'required|boolean:1,0',
+                'vehicle_id' => 'required',
+                'employeeposition_id' => 'required',
             ]
         );
         //Retornar mensajes de validación

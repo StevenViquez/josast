@@ -59,6 +59,12 @@ class ProductController extends Controller
             $request->all(),
             [
                 'name' => 'required|min:3',
+                'description' => 'required|max:500',
+                'cost' => 'required|numeric|max:10000000',
+                'is_enabled' => 'required',
+                'productclassification_id' => 'required',
+                'productbrand_id' => 'required',
+                'image' => 'required|mimes:jpeg,jpg,bmp,png',
             ]
         );
         if ($validator->fails()) {
@@ -167,6 +173,12 @@ class ProductController extends Controller
         //
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:3',
+            'description' => 'required|max:500',
+            'cost' => 'required|numeric|max:10000000',
+            'is_enabled' => 'required',
+            'productclassification_id' => 'required',
+            'productbrand_id' => 'required',
+            //'image' => 'required|mimes:jpeg,jpg,bmp,png',
         ]);
         //Retornar mensajes de validación
         if ($validator->fails()) {
