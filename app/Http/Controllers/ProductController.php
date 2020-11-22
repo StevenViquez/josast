@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Intervention\Image\ImageManagerStatic as Image;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -174,7 +175,6 @@ class ProductController extends Controller
 
         //Datos del videojuego
         $product = Product::find($id);
-        $product = new Videojuego();
         $product->name = $request->input('name');
         $product->description = $request->input('description');
         $product->cost = $request->input('cost');
@@ -192,7 +192,7 @@ class ProductController extends Controller
 
             //Obtener archivo de imagen anterior
             $videojuegoImagen
-                = public_path("images/{$product->url_picture}");
+                = public_path(Str::after($product->url_picture, 'http://127.0.0.1:8000/images/'));
             if (File::exists($videojuegoImagen)) {
                 //Borrar imagen anterior
                 File::delete($videojuegoImagen);
@@ -208,14 +208,14 @@ class ProductController extends Controller
         //Actualizar videojuego
         if ($product->update()) {
             //Sincronice generos
-            //Array de generos
-
+            //$product_features = $request->input('product_feature_id');
             //Solo es necesario con la imagen
             if (!is_array($request->input('product_feature_id'))) {
                 //Formato array relación muchos a muchos
                 $product_features =
                     explode(',', $request->input('product_feature_id'));
             }
+            //Postman does not send an array, so the request has a null "product_feature_id", due to the null array all product features may not be updated.
             if (!is_null($request->input('product_feature_id'))) {
                 //Agregar generos
                 $product->product_features()->sync($product_features);

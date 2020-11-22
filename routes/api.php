@@ -50,6 +50,7 @@ Route::group(['prefix' => 'josast'], function () {
         Route::get('all', [ProductController::class, 'index']);
         Route::get('/{id}', [ProductController::class, 'show']);
         Route::post('', [ProductController::class, 'store']);
+        Route::patch('/{id}', [ProductController::class, 'update']);
         Route::post('/by-productfeatures', [ProductController::class, 'products_product_features']);
     });
 });
