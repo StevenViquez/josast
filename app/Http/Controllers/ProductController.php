@@ -64,7 +64,7 @@ class ProductController extends Controller
                 'is_enabled' => 'required',
                 'productclassification_id' => 'required',
                 'productbrand_id' => 'required',
-                'image' => 'required|mimes:jpeg,jpg,bmp,png',
+                //'image' => 'required|mimes:jpeg,jpg,bmp,png',
             ]
         );
         if ($validator->fails()) {
