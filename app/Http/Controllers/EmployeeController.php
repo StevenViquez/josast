@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class EmployeeController extends Controller
 {
@@ -105,6 +106,26 @@ class EmployeeController extends Controller
             $response = $employee;
             return response()->json($response, 200);
         } catch (\Exception $e) {
+            return response()->json($e->getMessage(), 422);
+        }
+    }
+
+    public function getVendedores()
+    {
+        try {
+
+            /* $employee =
+                DB::table('employee_positions')
+                ->join('employees', function ($join) {
+                    $join->on('employees.id', '=', 'employee_positions.id')
+                        ->where('employee_positions.description', '=', 'vendedor');
+                })
+                ->get();*/
+                //List Employees
+                $employee = Employee::with(['employeeposition', 'vehicle', 'vehicle.vehicletype', 'vehicle.vehiclebrand'])->get();
+            $response = $employee;
+            return response()->json($response, 200);
+        } catch (Exception $e) {
             return response()->json($e->getMessage(), 422);
         }
     }

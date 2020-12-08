@@ -14,8 +14,16 @@ class StatusController extends Controller
      */
     public function index()
     {
-        //
+        try {
+            $status = Status::orderBy('id', 'desc')->get();
+            $response = $status;
+
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            return response()->json($e->getMessage(), 422);
+        }
     }
+
 
     /**
      * Show the form for creating a new resource.

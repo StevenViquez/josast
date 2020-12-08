@@ -30,6 +30,18 @@ class ProductController extends Controller
             return response()->json($e->getMessage(), 422);
         }
     }
+    public function filterProductByEnabled()
+    {
+         try {
+            //List Products
+            $products = Product::where('is_enabled', 1)->with(['productbrand', 'productclassification', 'productfeatures'])->get();
+            $response = $products;
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            //Exception $e;
+            return response()->json($e->getMessage(), 422);
+        }
+    }
 
     /**
      * Show the form for creating a new resource.

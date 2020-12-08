@@ -47,7 +47,24 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make(
+        $pTotal = 0;
+        $pSubTotal = 0;
+        $pTax = 0;
+        $productsIds = [];
+        $productQuantity = [];
+
+        $check = $request->all();
+        foreach ($check as $p) {
+            foreach ($p as $x) {
+                //$productId = array();
+                array_push($productsIds, $x["idItem"]);
+                array_push($productQuantity, $x["cantidad"]);
+                $pSubTotal = $pSubTotal + $x["subtotal"];
+            }
+            $pTax = $pSubTotal * 0.13;
+            $pTotal = $pTax + $pSubTotal + 800;
+        }
+        /* $validator = Validator::make(
             $request->all(),
             [
                 'need_delivery' => 'required|boolean:1,0',
@@ -63,26 +80,32 @@ class OrderController extends Controller
         );
         if ($validator->fails()) {
             return response()->json($validator->messages(), 422);
-        }
+        }*/
         try {
             $order = new Order();
-            $order->need_delivery = $request->input('need_delivery');
-            $order->delivery_fee = $request->input('delivery_fee');
-            $order->subtotal = $request->input('subtotal');
-            $order->tax = $request->input('tax');
-            $order->total = $request->input('total');
+
+            //Need to work here
+            // $order->need_delivery = NULL;
+
+            $order->delivery_fee = 800;
+            $order->subtotal = $pSubTotal;
+            $order->tax = $pTax;
+            $order->total = $pTotal;
             //$order->hired_date = Carbon::parse($request->input('hired_date'))->format('Y-m-d');
+
             //$order->is_enabled = $request->input('is_enabled');
-            $order->employee_id = $request->input('employee_id');
-            $order->customer_id = $request->input('customer_id');
+
+            //Need to work here
+            //$order->employee_id = $request->input('employee_id');
+            // $order->customer_id = $request->input('customer_id');
 
             //Save Employee
             if ($order->save()) {
+                $myID= $order->id;//New ID inserted in DB
+                $products = $productsIds; // Array with products IDs
+                $productsQuantity = $productQuantity; // Array with quantity per product
 
-                $products = $request->input('product_id'); // Array with products IDs
-                $productsQuantity = $request->input('quantity'); // Array with quantity per product
-
-                if (!is_null($request->input('product_id'))) {
+                if (!is_null($productsIds)) {
 
                     //This for each will map product id with quantity. "$products" and "$productsQuantity" must have always exactly the same lenght in order to determine the quantity on a product in an order.
                     $count = 0;
@@ -97,17 +120,13 @@ class OrderController extends Controller
                     //https://stackoverflow.com/questions/47034969/inserting-data-into-additional-attributes-in-pivot-table
                 }
 
-                $statuses = $request->input('status_id');
-
-                if (!is_null($request->input('status_id'))) {
-                    //Agregar generos
-                    $order->statuses()->attach($statuses);
-                }
+                   //Agregar status
+                    $order->statuses()->attach([1]);
 
 
 
                 $response = 'Orden creada!';
-                return response()->json($response, 201);
+                return response()->json([$response, $myID], 201);
             } else {
                 $response = [
                     'msg' => 'Error durante la creación'
@@ -171,4 +190,58 @@ class OrderController extends Controller
     {
         //
     }
+
+
+
+
+    public function completeOrder(Request $request, $id)
+    {
+        
+
+        //Employee's data
+        $order = Order::find($id);
+        $order->need_delivery = $request->input('need_delivery');
+        $order->employee_id = $request->input('employee_id');
+        $order->customer_id = $request->input('customer_id');
+
+
+        if ($order->update()) {
+            //Sincronice generos
+            //Array de generos
+            $response = 'Orden completada!';
+            return response()->json($response, 200);
+        }
+        $response = [
+            'msg' => 'Error durante la actualización'
+        ];
+
+        return response()->json($response, 404);
+    }
+
+
+    public function changeStatus(Request $request)
+    {
+        $myData = $request->all();
+        //Employee's data
+        $order = Order::find($myData[1]);//data[1] == contiene el id del producto
+        $order->statuses()->attach($myData[0]);//data[0] == contiene el id del status
+            //Sincronice generos
+            //Array de generos
+            $response = 'El estado ha sido cambiado!';
+            return response()->json($response, 200);
+
+        $response = [
+            'msg' => 'Error durante la actualización'
+        ];
+
+        return response()->json($response, 404);
+    }
+
+
+
+
+
+
+
+
 }

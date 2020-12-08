@@ -8,11 +8,13 @@ use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\EmployeePositionController;
 use App\Http\Controllers\ProductBrandController;
 use App\Http\Controllers\ProductClassificationController;
 use App\Http\Controllers\ProductFeatureController;
 use App\Http\Controllers\RolController;
+use App\Http\Controllers\StatusController;
 use App\Models\ProductBrand;
 use App\Models\ProductFeature;
 
@@ -48,21 +50,23 @@ Route::group(['prefix' => 'josast'], function () {
 //http://127.0.0.1:8000/api/josast/product
 Route::group(['prefix' => 'josast'], function () {
     Route::group(['prefix' => 'product'], function () {
-        Route::get('all', [ProductController::class, 'index']);
-        Route::get('/{id}', [ProductController::class, 'show']);
-        Route::post('', [ProductController::class, 'store']);
-        Route::patch('/{id}', [ProductController::class, 'update']);
-        Route::post('/by-productfeatures', [ProductController::class, 'products_product_features']);
+        Route::get('all', [ProductController::class, 'index'])->middleware(["auth:api", "scope:administrador"]);
+        Route::get('enabled-products', [ProductController::class, 'filterProductByEnabled'])->middleware(["auth:api", "scope:vendedor"]);
+        Route::get('/{id}', [ProductController::class, 'show'])->middleware(["auth:api", "scopes:administrador,vendedor"]);
+        Route::post('', [ProductController::class, 'store'])->middleware(["auth:api", "scope:administrador"]);
+        Route::patch('/{id}', [ProductController::class, 'update'])->middleware(["auth:api", "scope:administrador"]);
+        //Route::post('/by-productfeatures', [ProductController::class, 'products_product_features']);
     });
 });
 
 //http://127.0.0.1:8000/api/josast/employee
 Route::group(['prefix' => 'josast'], function () {
     Route::group(['prefix' => 'employee'], function () {
-        Route::get('all', [EmployeeController::class, 'index']);
-        Route::get('/{id}', [EmployeeController::class, 'show']);
-        Route::post('', [EmployeeController::class, 'store'])/**->middleware(["auth:api", "scope:administrador"])**/;
-        Route::patch('/{id}', [EmployeeController::class, 'update']);
+        Route::get('all', [EmployeeController::class, 'index'])->middleware(["auth:api", "scope:administrador"]);
+        Route::get('vendedores', [EmployeeController::class, 'getVendedores'])->middleware(["auth:api", "scope:vendedor"]);
+        Route::get('/{id}', [EmployeeController::class, 'show'])->middleware(["auth:api", "scope:administrador"]);
+        Route::post('', [EmployeeController::class, 'store'])->middleware(["auth:api", "scope:administrador"]);
+        Route::patch('/{id}', [EmployeeController::class, 'update'])->middleware(["auth:api", "scope:administrador"]);
     });
 });
 
@@ -72,7 +76,9 @@ Route::group(['prefix' => 'josast'], function () {
     Route::group(['prefix' => 'order'], function () {
         Route::get('all', [OrderController::class, 'index']);
         Route::get('/{id}', [OrderController::class, 'show']);
-        Route::post('', [OrderController::class, 'store']);
+        Route::post('', [OrderController::class, 'store'])->middleware(["auth:api", "scope:vendedor"]);
+        Route::patch('/complete-order/{id}', [OrderController::class, 'completeOrder'])->middleware(["auth:api", "scope:vendedor"]);
+        Route::post('/change-status', [OrderController::class, 'changeStatus'])->middleware(["auth:api", "scope:vendedor"]);
     });
 });
 
@@ -81,6 +87,8 @@ Route::group(['prefix' => 'josast'], function () {
 Route::group(['prefix' => 'josast'], function () {
     Route::group(['prefix' => 'bill'], function () {
         Route::get('', [BillController::class, 'index']);
+        Route::post('', [BillController::class, 'store'])->middleware(["auth:api", "scope:vendedor"]);
+        Route::get('/{id}', [BillController::class, 'show'])->middleware(["auth:api", "scope:vendedor"]);
     });
 });
 
@@ -118,5 +126,19 @@ Route::group(['prefix' => 'josast'], function () {
 Route::group(['prefix' => 'josast'], function () {
     Route::group(['prefix' => 'employee-position'], function () {
         Route::get('', [EmployeePositionController::class, 'index']);
+    });
+});
+
+//http://127.0.0.1:8000/api/josast/customer
+Route::group(['prefix' => 'josast'], function () {
+    Route::group(['prefix' => 'customer'], function () {
+        Route::get('', [CustomerController::class, 'index']);
+    });
+});
+
+//http://127.0.0.1:8000/api/josast/status
+Route::group(['prefix' => 'josast'], function () {
+    Route::group(['prefix' => 'status'], function () {
+        Route::get('', [StatusController::class, 'index']);
     });
 });
